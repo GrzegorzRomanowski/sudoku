@@ -8,6 +8,7 @@ f = "Comic Sans MS"
 s = "14"
 
 button_list = [[0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9]
+current_puzzle2 = [[0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9]
 writing_button_list = [[0]*3, [0]*3, [0]*3]
 xxx = ""
 
@@ -32,11 +33,13 @@ for i in range(9):
 
 def pull():
     puzzle = random.choice(raw_sudoku)
-    return puzzle
+    return tuple(puzzle)
 
 def load_puzzel_frame():
-    global current_puzzle2
-    current_puzzle2 = current_puzzle
+    global current_puzzle2, current_puzzle
+    for gggg in range(9):
+        for ggggg in range(9):
+            current_puzzle2[gggg][ggggg] = current_puzzle[gggg][ggggg]
     for q in button_list:
         for w in q:
             w.config(state=tk.NORMAL)
@@ -93,7 +96,7 @@ a = 0
 while a < 3:
     for h in writing_button_list[a]:
         b = writing_button_list[a].index(h)
-        writing_button_list[a][b].config(command=pick(a,b))
+        writing_button_list[a][b].config(command=pick(a, b))
     a += 1
 
 def warning():
@@ -190,7 +193,7 @@ aa = 0
 while aa < 9:
     for hh in button_list[aa]:
         bb = button_list[aa].index(hh)
-        button_list[aa][bb].config(command=put(aa,bb))
+        button_list[aa][bb].config(command=put(aa, bb))
     aa += 1
 
 new_game()
