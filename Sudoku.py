@@ -202,74 +202,95 @@ def check() -> int:
     Function checks possibility to enter a new number into puzzle according to the rules of solving Sudoku.
     :return: 1 if rules were not broken or 0 if one of them was
     """
-    for z in range(1, 10):
+    for digit in range(1, 10):
         # horizontal check
-        for zz in current_puzzle2:
-            horizontal = zz.count(z)
-            if horizontal > 1:
+        for h_row in current_puzzle2:
+            horizontal_count = h_row.count(digit)
+            if horizontal_count > 1:
                 return 0
         # vertical check
-        g = 0
-        while g < 9:
+        v_column_index = 0
+        while v_column_index < 9:
             vertical_list = []
-            for zzz in current_puzzle2:
-                vertical_list.append(zzz[g])
-            vertical = vertical_list.count(z)
-            if vertical > 1:
+            for v_row in current_puzzle2:
+                vertical_list.append(v_row[v_column_index])
+            vertical_count = vertical_list.count(digit)
+            if vertical_count > 1:
                 return 0
-            g += 1
+            v_column_index += 1
         # square check
-        for t in range(3):
-            for tt in range(3):
-                square_list = []
-                u = 0
-                while u < 9:
-                    v = 0
-                    while v < 9:
-                        if (u // 3) == t and (v // 3) == tt:
-                            square_list.append(current_puzzle2[u][v])
-                        v += 1
-                    u += 1
-                square = square_list.count(z)
-                if square > 1:
+        for square_v_index in range(3):
+            for square_h_index in range(3):
+                square_list = []  # Init list of numbers filled in each square
+                s_row = 0
+                while s_row < 9:
+                    s_col = 0
+                    while s_col < 9:
+                        if (s_row // 3) == square_v_index and (s_col // 3) == square_h_index:
+                            # Here we fill a 'square_list' with already filled digits
+                            square_list.append(current_puzzle2[s_row][s_col])
+                        s_col += 1
+                    s_row += 1
+                square_count = square_list.count(digit)
+                if square_count > 1:
                     return 0
     return 1
 
-def win():
-    win_list = []
-    for ww in current_puzzle2:
-        for www in ww:
-            win_list.append(www)
-    game_ended = win_list.count(0)
-    if game_ended == 0:
+
+def win() -> int:
+    """
+    Checks if it's game over (win)
+    :return: 1 if all buttons are filled with 1-9 digit or 0 if any button contains zero
+    """
+    win_list_of_all_filled_values = []
+    for win_row in current_puzzle2:
+        for win_button in win_row:
+            win_list_of_all_filled_values.append(win_button)
+    zeroes_count = win_list_of_all_filled_values.count(0)
+    if zeroes_count == 0:
         return 1
     else:
         return 0
 
-def put(kk,ll):
+
+def put(vertical_coordinate: int, horizontal_coordinate: int):
+    """
+    This function returns the execution of the 'put2' function on the specified 'puzzle button' based on coordinates.
+    The 'Put2' function assigns a command to one button in the 'puzzle button panel'.
+    Those two functions (one inside another) give the possibility to assign the function to all buttons in one loop.
+    :param vertical_coordinate: row index on puzzle buttons panel
+    :param horizontal_coordinate: column index on puzzle buttons panel
+    :return:
+    """
     def put2():
         global number_to_type
-        current_puzzle2[kk][ll] = number_to_type
+        # Replace value in current_puzzle2
+        current_puzzle2[vertical_coordinate][horizontal_coordinate] = number_to_type
+        # Checks whether entering this value has not broken the rules of the SUDOKU game
         cannot = check()
-        if cannot == 1:
-            if number_to_type == 0:
-                button_list[kk][ll].config(text="")
+        if cannot == 1:  # if it's OK
+            if number_to_type == 0:  # if user planned to clear the value
+                button_list[vertical_coordinate][horizontal_coordinate].config(text="")
             else:
-                button_list[kk][ll].config(text=number_to_type)
-        elif cannot == 0:
-            current_puzzle2[kk][ll] = 0
+                button_list[vertical_coordinate][horizontal_coordinate].config(text=number_to_type)
+        elif cannot == 0:  # if it breaks rules back value to zero and throw warning
+            current_puzzle2[vertical_coordinate][horizontal_coordinate] = 0
             warning()
+        # After every value entering check if its game over
         winner = win()
         if winner == 1:
             finished()
     return put2
 
+
+# Loop for assign function to puzzle buttons ('aa' anb 'bb' are the vertical_coordinate and horizontal_coordinate)
 aa = 0
 while aa < 9:
-    for hh in button_list[aa]:
-        bb = button_list[aa].index(hh)
+    for button in button_list[aa]:
+        bb = button_list[aa].index(button)
         button_list[aa][bb].config(command=put(aa, bb))
     aa += 1
+
 
 new_game()
 
