@@ -4,7 +4,8 @@ import random
 import tkinter as tk
 from raw_data import *
 
-# Init variables REGION
+
+# region *** Init variables REGION ***
 
 # Fonts and font sizes
 f = "Comic Sans MS"
@@ -19,28 +20,10 @@ writing_button_list = [[0]*3, [0]*3, [0]*3]
 # Init of global variables containing current number to type
 number_to_type = ""
 
-# Main App Window from Tkinter
-main_window = tk.Tk()
-main_window.title("SUDOKU")
-main_window.iconbitmap("icon.ico")
-main_window.geometry("450x670")
+# endregion
 
-main_frame = tk.Frame(main_window)
-main_frame.pack(pady=10)
 
-# Init a Tkinter buttons 9 x 9 and paint then like a yellow/blue chessboard. Buttons have no command in this stage.
-for row in range(9):
-    for column in range(9):
-        if (((row // 3) + 1) * ((column // 3) + 1)) % 2 == 0:
-            colour = "Yellow"
-        else:
-            colour = "Light Blue"
-        if (((row // 3) + 1) * ((column // 3) + 1)) == 4:
-            colour = "Light BLue"
-        button = tk.Button(main_frame, text="", font=(f, s, 'bold'), width=3, command=None, bg=colour)
-        button.grid(row=row, column=column, padx=1, pady=1)
-        button_list[row][column] = button
-
+# region *** REGION of functions for buttons command ***
 
 def pull() -> tuple:
     """
@@ -89,25 +72,6 @@ def new_game():
     load_puzzel_frame()
 
 
-# Create buttons for typing values and 'New game' and 'Restart' buttons
-writing_frame = tk.Frame(main_window)
-writing_frame.pack(side=tk.LEFT, padx=10)
-
-button_new_game = tk.Button(main_window, text="New game", font=(f, s,), width=22, command=new_game)
-button_new_game.pack(anchor=tk.E, padx=10, pady=27)
-
-button_reset = tk.Button(main_window, text="Restart current game", font=(f, s,), width=22, command=load_puzzel_frame)
-button_reset.pack(anchor=tk.E, padx=10, pady=25)
-
-# Init Tkinter buttons 3 x 3 to pick a number to type. Buttons have no command in this stage.
-for row in range(3):
-    for col in range(3):
-        writing_button = tk.Button(writing_frame, text=(row*3+col+1), font=(f, s), width=3, command=None,
-                                   bg="Silver", fg="Black")
-        writing_button.grid(row=row, column=col, padx=1, pady=1)
-        writing_button_list[row][col] = writing_button
-
-
 def clean():
     """
     Function under the 'Clean' button. It reset value of 'number_to_type' to zero and recolor the 'writing buttons'.
@@ -119,11 +83,6 @@ def clean():
         for writing_button in row:
             writing_button.config(bg="Silver", fg="Black")
     zero_button.config(bg="Black", fg="White")
-
-
-# Init 'Zero button'
-zero_button = tk.Button(writing_frame, text="Clean", font=(f, s), command=clean, bg="Silver", fg="Black")
-zero_button.grid(row=3, column=0, columnspan=3, padx=1, pady=1, sticky=tk.NSEW)
 
 
 def pick(vertical_coordinate: int, horizontal_coordinate: int):
@@ -144,16 +103,6 @@ def pick(vertical_coordinate: int, horizontal_coordinate: int):
         zero_button.config(bg="Silver", fg="Black")
         writing_button_list[vertical_coordinate][horizontal_coordinate].config(bg="Black", fg="White")
     return pick2
-
-
-# Loop for assign function to writing buttons ('a' anb 'b' are the vertical_coordinate and horizontal_coordinate)
-a = 0
-while a < 3:
-    for button in writing_button_list[a]:
-        b = writing_button_list[a].index(button)
-        writing_button_list[a][b].config(command=pick(vertical_coordinate=a,
-                                                      horizontal_coordinate=b))
-    a += 1
 
 
 def warning():
@@ -284,6 +233,66 @@ def put(vertical_coordinate: int, horizontal_coordinate: int):
     return put2
 
 
+# endregion
+
+
+# region *** REGION for GUI with Tkinter ***
+
+# Main App Window
+main_window = tk.Tk()
+main_window.title("SUDOKU")
+main_window.iconbitmap("icon.ico")
+main_window.geometry("450x670")
+
+main_frame = tk.Frame(main_window)
+main_frame.pack(pady=10)
+
+# Init a Tkinter buttons 9 x 9 and paint then like a yellow/blue chessboard. Buttons have no command in this stage.
+for row in range(9):
+    for column in range(9):
+        if (((row // 3) + 1) * ((column // 3) + 1)) % 2 == 0:
+            colour = "Yellow"
+        else:
+            colour = "Light Blue"
+        if (((row // 3) + 1) * ((column // 3) + 1)) == 4:
+            colour = "Light BLue"
+        button = tk.Button(main_frame, text="", font=(f, s, 'bold'), width=3, command=None, bg=colour)
+        button.grid(row=row, column=column, padx=1, pady=1)
+        button_list[row][column] = button
+
+# Create buttons for typing values and 'New game' and 'Restart' buttons
+writing_frame = tk.Frame(main_window)
+writing_frame.pack(side=tk.LEFT, padx=10)
+
+button_new_game = tk.Button(main_window, text="New game", font=(f, s,), width=22, command=new_game)
+button_new_game.pack(anchor=tk.E, padx=10, pady=27)
+
+button_reset = tk.Button(main_window, text="Restart current game", font=(f, s,), width=22, command=load_puzzel_frame)
+button_reset.pack(anchor=tk.E, padx=10, pady=25)
+
+# Init Tkinter buttons 3 x 3 to pick a number to type. Buttons have no command in this stage.
+for row in range(3):
+    for col in range(3):
+        writing_button = tk.Button(writing_frame, text=(row*3+col+1), font=(f, s), width=3, command=None,
+                                   bg="Silver", fg="Black")
+        writing_button.grid(row=row, column=col, padx=1, pady=1)
+        writing_button_list[row][col] = writing_button
+
+# Init 'Zero button'
+zero_button = tk.Button(writing_frame, text="Clean", font=(f, s), command=clean, bg="Silver", fg="Black")
+zero_button.grid(row=3, column=0, columnspan=3, padx=1, pady=1, sticky=tk.NSEW)
+
+
+# Loop for assign function to writing buttons ('a' anb 'b' are the vertical_coordinate and horizontal_coordinate)
+a = 0
+while a < 3:
+    for button in writing_button_list[a]:
+        b = writing_button_list[a].index(button)
+        writing_button_list[a][b].config(command=pick(vertical_coordinate=a,
+                                                      horizontal_coordinate=b))
+    a += 1
+
+
 # Loop for assign function to puzzle buttons ('aa' anb 'bb' are the vertical_coordinate and horizontal_coordinate)
 aa = 0
 while aa < 9:
@@ -296,3 +305,5 @@ while aa < 9:
 new_game()
 
 main_window.mainloop()
+
+# endregion
