@@ -1,3 +1,3 @@
 # Sudoku
 
-Sudoku Desktop App with Python and TKinter.
+Sudoku Desktop App with Python and Tkinter.
