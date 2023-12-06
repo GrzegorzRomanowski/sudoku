@@ -53,40 +53,60 @@ def pull() -> tuple:
 
 
 def load_puzzel_frame():
+    """
+    Fill buttons 9 x 9 in 'button_list' with values from 'current puzzle'
+    and create a copy of working version of the 'current puzzle'
+    :return:
+    """
     global current_puzzle2, current_puzzle
-    for gggg in range(9):
-        for ggggg in range(9):
-            current_puzzle2[gggg][ggggg] = current_puzzle[gggg][ggggg]
-    for q in button_list:
-        for w in q:
-            w.config(state=tk.NORMAL)
-    for m in range(9):
-        for n in range(9):
-            num1 = current_puzzle[m][n]
-            if num1 == 0:
-                num = ""
+    # Creating a working version of the 'current puzzle'
+    for row in range(9):
+        for column in range(9):
+            current_puzzle2[row][column] = current_puzzle[row][column]
+    # Set 'normal' stage to all buttons
+    for row in button_list:
+        for button in row:
+            button.config(state=tk.NORMAL)
+    # Enter the values into buttons and set 'disabled' stage to buttons which shouldn't be modified during game
+    for row in range(9):
+        for column in range(9):
+            number_from_raw_data = current_puzzle[row][column]
+            if number_from_raw_data == 0:
+                initial_value = ""
             else:
-                num = num1
-                button_list[m][n].config(state=tk.DISABLED, fg="Black")
-            button_list[m][n].config(text=num)
+                initial_value = number_from_raw_data
+                button_list[row][column].config(state=tk.DISABLED, fg="Black")
+            button_list[row][column].config(text=initial_value)
+
 
 def new_game():
+    """
+    Pull new data from 'raw_data' file and reload frame with buttons
+    :return:
+    """
     global current_puzzle
     current_puzzle = pull()
     load_puzzel_frame()
 
+
+# Create buttons for typing values and 'New game' and 'Restart' buttons
 writing_frame = tk.Frame(main_window)
 writing_frame.pack(side=tk.LEFT, padx=10)
+
 button_new_game = tk.Button(main_window, text="New game", font=(f, s,), width=22, command=new_game)
 button_new_game.pack(anchor=tk.E, padx=10, pady=27)
+
 button_reset = tk.Button(main_window, text="Restart current game", font=(f, s,), width=22, command=load_puzzel_frame)
 button_reset.pack(anchor=tk.E, padx=10, pady=25)
 
-for k in range(3):
-    for l in range(3):
-        writing_button = tk.Button(writing_frame, text=(k*3+l+1), font=(f, s), width=3, command=None, bg="Silver", fg="Black")
-        writing_button.grid(row=k, column=l, padx=1, pady=1)
-        writing_button_list[k][l] = writing_button
+# Init Tkinter buttons 3 x 3 to pick a number to type. Buttons have no command in this stage.
+for row in range(3):
+    for col in range(3):
+        writing_button = tk.Button(writing_frame, text=(row*3+col+1), font=(f, s), width=3, command=None,
+                                   bg="Silver", fg="Black")
+        writing_button.grid(row=row, column=col, padx=1, pady=1)
+        writing_button_list[row][col] = writing_button
+
 
 def clean():
     global number_to_type
@@ -95,8 +115,11 @@ def clean():
         for d in c:
             d.config(bg="Silver", fg="Black")
     zero_button.config(bg="Black", fg="White")
+
+
 zero_button = tk.Button(writing_frame, text="Clean", font=(f, s), command=clean, bg="Silver", fg="Black")
 zero_button.grid(row=3, column=0, columnspan=3, padx=1, pady=1, sticky=tk.NSEW)
+
 
 def pick(k,l):
     def pick2():
