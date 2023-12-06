@@ -1,14 +1,19 @@
 # SUDOKU
+
 import random
 import tkinter as tk
 from raw_data import *
 
-# fonts and font sizes
+# Fonts and font sizes
 f = "Comic Sans MS"
 s = "14"
 
+#
+# Init list of buttons 9 x 9
 button_list = [[0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9]
+# Init list of buttons 9 x 9 - duplicated version of 'button_list' with filled values during the game
 current_puzzle2 = [[0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9]
+# Init list of buttons used to typing numbers from 1 to 0
 writing_button_list = [[0]*3, [0]*3, [0]*3]
 xxx = ""
 
