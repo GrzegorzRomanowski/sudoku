@@ -9,32 +9,37 @@ f = "Comic Sans MS"
 s = "14"
 
 #
-# Init list of buttons 9 x 9
+# Init empty list for buttons 9 x 9
 button_list = [[0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9]
-# Init list of buttons 9 x 9 - duplicated version of 'button_list' with filled values during the game
+# Init empty list for buttons 9 x 9 - duplicated version of 'button_list' with filled values during the game
 current_puzzle2 = [[0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9]
-# Init list of buttons used to typing numbers from 1 to 0
+# Init empty list of buttons used to typing numbers from 1 to 9
 writing_button_list = [[0]*3, [0]*3, [0]*3]
-xxx = ""
+# Init of global variables containing current number to type
+number_to_type = ""
 
+# Main App Window from Tkinter
 main_window = tk.Tk()
 main_window.title("SUDOKU")
-main_window.iconbitmap('C:/Dane/Python/Wlasne/Sudoku/icon.ico')
+main_window.iconbitmap("icon.ico")
 main_window.geometry("450x670")
 
 main_frame = tk.Frame(main_window)
 main_frame.pack(pady=10)
-for i in range(9):
-    for j in range(9):
-        if (((i // 3) + 1) * ((j // 3) + 1)) % 2 == 0:
+
+# Init a Tkinter buttons 9 x 9 and paint then like a yellow/blue chessboard. Buttons have no command in this stage.
+for row in range(9):
+    for column in range(9):
+        if (((row // 3) + 1) * ((column // 3) + 1)) % 2 == 0:
             colour = "Yellow"
         else:
             colour = "Light Blue"
-        if (((i // 3) + 1) * ((j // 3) + 1)) == 4:
+        if (((row // 3) + 1) * ((column // 3) + 1)) == 4:
             colour = "Light BLue"
         button = tk.Button(main_frame, text="", font=(f, s, 'bold'), width=3, command=None, bg=colour)
-        button.grid(row=i, column=j, padx=1, pady=1)
-        button_list[i][j] = button
+        button.grid(row=row, column=column, padx=1, pady=1)
+        button_list[row][column] = button
+
 
 def pull():
     puzzle = random.choice(raw_sudoku)
@@ -77,8 +82,8 @@ for k in range(3):
         writing_button_list[k][l] = writing_button
 
 def clean():
-    global xxx
-    xxx = 0
+    global number_to_type
+    number_to_type = 0
     for c in writing_button_list:
         for d in c:
             d.config(bg="Silver", fg="Black")
@@ -88,8 +93,8 @@ zero_button.grid(row=3, column=0, columnspan=3, padx=1, pady=1, sticky=tk.NSEW)
 
 def pick(k,l):
     def pick2():
-        global xxx
-        xxx = (k * 3 + l + 1)
+        global number_to_type
+        number_to_type = (k * 3 + l + 1)
         for c in writing_button_list:
             for d in c:
                 d.config(bg="Silver", fg="Black")
@@ -178,14 +183,14 @@ def win():
 
 def put(kk,ll):
     def put2():
-        global xxx
-        current_puzzle2[kk][ll] = xxx
+        global number_to_type
+        current_puzzle2[kk][ll] = number_to_type
         cannot = check()
         if cannot == 1:
-            if xxx == 0:
+            if number_to_type == 0:
                 button_list[kk][ll].config(text="")
             else:
-                button_list[kk][ll].config(text=xxx)
+                button_list[kk][ll].config(text=number_to_type)
         elif cannot == 0:
             current_puzzle2[kk][ll] = 0
             warning()
