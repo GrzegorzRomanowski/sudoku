@@ -109,64 +109,99 @@ for row in range(3):
 
 
 def clean():
+    """
+    Function under the 'Clean' button. It reset value of 'number_to_type' to zero and recolor the 'writing buttons'.
+    :return:
+    """
     global number_to_type
     number_to_type = 0
-    for c in writing_button_list:
-        for d in c:
-            d.config(bg="Silver", fg="Black")
+    for row in writing_button_list:
+        for writing_button in row:
+            writing_button.config(bg="Silver", fg="Black")
     zero_button.config(bg="Black", fg="White")
 
 
+# Init 'Zero button'
 zero_button = tk.Button(writing_frame, text="Clean", font=(f, s), command=clean, bg="Silver", fg="Black")
 zero_button.grid(row=3, column=0, columnspan=3, padx=1, pady=1, sticky=tk.NSEW)
 
 
-def pick(k,l):
+def pick(vertical_coordinate: int, horizontal_coordinate: int):
+    """
+    This function returns the execution of the 'pick2' function on the specified 'writing button' based on coordinates.
+    The 'Pick2' function assigns a command to one button in the 'writing button panel'.
+    Those two functions (one inside another) give the possibility to assign the function to all buttons in one loop.
+    :param vertical_coordinate: row index on writing buttons panel
+    :param horizontal_coordinate: column index on writing buttons panel
+    :return:
+    """
     def pick2():
         global number_to_type
-        number_to_type = (k * 3 + l + 1)
-        for c in writing_button_list:
-            for d in c:
-                d.config(bg="Silver", fg="Black")
+        number_to_type = (vertical_coordinate * 3 + horizontal_coordinate + 1)
+        for row_with_buttons in writing_button_list:
+            for writing_button in row_with_buttons:
+                writing_button.config(bg="Silver", fg="Black")
         zero_button.config(bg="Silver", fg="Black")
-        writing_button_list[k][l].config(bg="Black", fg="White")
+        writing_button_list[vertical_coordinate][horizontal_coordinate].config(bg="Black", fg="White")
     return pick2
 
+
+# Loop for assign function to writing buttons ('a' anb 'b' are the vertical_coordinate and horizontal_coordinate)
 a = 0
 while a < 3:
-    for h in writing_button_list[a]:
-        b = writing_button_list[a].index(h)
-        writing_button_list[a][b].config(command=pick(a, b))
+    for button in writing_button_list[a]:
+        b = writing_button_list[a].index(button)
+        writing_button_list[a][b].config(command=pick(vertical_coordinate=a,
+                                                      horizontal_coordinate=b))
     a += 1
 
+
 def warning():
+    """
+    Function which throw a warning message box.
+    :return:
+    """
     warning_window = tk.Toplevel()
     warning_window.title("Warning")
-    warning_window.iconbitmap('C:/Dane/Python/Wlasne/Sudoku/icon.ico')
+    warning_window.iconbitmap("icon.ico")
     warning_text = "You cannot enter the selected number\nin this field!"
     war = tk.Label(warning_window, text=warning_text, font=(f, s), padx=10, pady=10)
     war.pack()
+
     def war_destroy():
         warning_window.destroy()
+
     war_button = tk.Button(warning_window, text="OK", width=10, font=(f, s), command=war_destroy)
     war_button.pack(padx=10, pady=10)
     warning_window.mainloop()
 
+
 def finished():
+    """
+    Function which throw a message box with congratulations. Puzzle solved.
+    :return:
+    """
     finished_window = tk.Toplevel()
     finished_window.title("Congratulations !")
-    finished_window.iconbitmap('C:/Dane/Python/Wlasne/Sudoku/icon.ico')
+    finished_window.iconbitmap("icon.ico")
     finished_text = "YOU WIN!"
     fin = tk.Label(finished_window, text=finished_text, font=(f, s), padx=10, pady=10)
     fin.pack()
+
     def fin_destroy():
         finished_window.destroy()
         new_game()
+
     fin_button = tk.Button(finished_window, text="New game?", width=10, font=(f, s), command=fin_destroy)
     fin_button.pack(padx=10, pady=10)
     finished_window.mainloop()
 
-def check():
+
+def check() -> int:
+    """
+    Function checks possibility to enter a new number into puzzle according to the rules of solving Sudoku.
+    :return: 1 if rules were not broken or 0 if one of them was
+    """
     for z in range(1, 10):
         # horizontal check
         for zz in current_puzzle2:
