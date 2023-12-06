@@ -265,6 +265,7 @@ def put(vertical_coordinate: int, horizontal_coordinate: int):
     def put2():
         global number_to_type
         # Replace value in current_puzzle2
+        already_written_value = current_puzzle2[vertical_coordinate][horizontal_coordinate]
         current_puzzle2[vertical_coordinate][horizontal_coordinate] = number_to_type
         # Checks whether entering this value has not broken the rules of the SUDOKU game
         cannot = check()
@@ -274,7 +275,7 @@ def put(vertical_coordinate: int, horizontal_coordinate: int):
             else:
                 button_list[vertical_coordinate][horizontal_coordinate].config(text=number_to_type)
         elif cannot == 0:  # if it breaks rules back value to zero and throw warning
-            current_puzzle2[vertical_coordinate][horizontal_coordinate] = 0
+            current_puzzle2[vertical_coordinate][horizontal_coordinate] = already_written_value
             warning()
         # After every value entering check if its game over
         winner = win()
