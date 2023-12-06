@@ -4,11 +4,12 @@ import random
 import tkinter as tk
 from raw_data import *
 
+# Init variables REGION
+
 # Fonts and font sizes
 f = "Comic Sans MS"
 s = "14"
 
-#
 # Init empty list for buttons 9 x 9
 button_list = [[0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9]
 # Init empty list for buttons 9 x 9 - duplicated version of 'button_list' with filled values during the game
@@ -41,9 +42,15 @@ for row in range(9):
         button_list[row][column] = button
 
 
-def pull():
+def pull() -> tuple:
+    """
+    Pull the set of numbers with an unstarted sudoku game from 'raw_data' file.
+    Function randomly selects 1 puzzle out of 27 available
+    :return: tuple with fresh set of numbers
+    """
     puzzle = random.choice(raw_sudoku)
     return tuple(puzzle)
+
 
 def load_puzzel_frame():
     global current_puzzle2, current_puzzle
