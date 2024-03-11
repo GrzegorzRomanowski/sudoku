@@ -1,5 +1,5 @@
-# SUDOKU
-
+import os
+import sys
 import random
 import tkinter as tk
 from raw_data import *
@@ -10,6 +10,7 @@ from raw_data import *
 # Fonts and font sizes
 f = "Comic Sans MS"
 s = "14"
+
 
 # Init empty list for buttons 9 x 9
 button_list = [[0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9, [0]*9]
@@ -23,11 +24,26 @@ number_to_type = ""
 # endregion
 
 
-# region *** REGION of functions for buttons command ***
+def resource_path(relative_path):
+    """
+    Get absolute path to resource, works for dev and for PyInstaller
+    """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
 
+    return os.path.join(base_path, relative_path)
+
+
+logo_path = resource_path("icon.ico")
+
+
+# region *** REGION of functions for buttons command ***
 def pull() -> tuple:
     """
-    Pull the set of numbers with an unstarted sudoku game from 'raw_data' file.
+    Pull the set of numbers with a not begun sudoku game from 'raw_data' file.
     Function randomly selects 1 puzzle out of 27 available
     :return: tuple with fresh set of numbers
     """
@@ -112,7 +128,7 @@ def warning():
     """
     warning_window = tk.Toplevel()
     warning_window.title("Warning")
-    warning_window.iconbitmap("icon.ico")
+    warning_window.iconbitmap(logo_path)
     warning_text = "You cannot enter the selected number\nin this field!"
     war = tk.Label(warning_window, text=warning_text, font=(f, s), padx=10, pady=10)
     war.pack()
@@ -132,7 +148,7 @@ def finished():
     """
     finished_window = tk.Toplevel()
     finished_window.title("Congratulations !")
-    finished_window.iconbitmap("icon.ico")
+    finished_window.iconbitmap(logo_path)
     finished_text = "YOU WIN!"
     fin = tk.Label(finished_window, text=finished_text, font=(f, s), padx=10, pady=10)
     fin.pack()
@@ -242,7 +258,7 @@ if __name__ == "__main__":
     # Main App Window
     main_window = tk.Tk()
     main_window.title("SUDOKU")
-    main_window.iconbitmap("icon.ico")
+    main_window.iconbitmap(logo_path)
     main_window.geometry("450x670")
 
     main_frame = tk.Frame(main_window)
